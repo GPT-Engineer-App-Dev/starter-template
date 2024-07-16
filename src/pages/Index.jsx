@@ -4,65 +4,62 @@ import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
 
-const RandomStringGenerator = () => {
-  const [length, setLength] = React.useState(8);
-  const [generatedString, setGeneratedString] = React.useState('');
+const AsdPage = () => {
+  const [inputText, setInputText] = React.useState('');
+  const [outputText, setOutputText] = React.useState('');
 
-  const generateRandomString = (len) => {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
-    let result = '';
-    for (let i = 0; i < len; i++) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return result;
+  const handleInputChange = (event) => {
+    setInputText(event.target.value);
   };
 
-  const handleGenerate = () => {
-    const newString = generateRandomString(length);
-    setGeneratedString(newString);
+  const handleTransform = () => {
+    const transformed = inputText
+      .split('')
+      .map(char => {
+        if (char.toLowerCase() === 'a') return 'A';
+        if (char.toLowerCase() === 's') return 'S';
+        if (char.toLowerCase() === 'd') return 'D';
+        return char;
+      })
+      .join('');
+    
+    setOutputText(transformed);
     toast({
-      title: "String Generated",
-      description: `New string: ${newString}`,
+      title: "Text Transformed",
+      description: "Your text has been ASD-ified!",
     });
   };
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(generatedString).then(() => {
+    navigator.clipboard.writeText(outputText).then(() => {
       toast({
         title: "Copied!",
-        description: "The generated string has been copied to your clipboard.",
+        description: "The transformed text has been copied to your clipboard.",
       });
     });
   };
 
   return (
     <div className="container mx-auto mt-8 p-4">
-      <h1 className="text-4xl font-bold text-center mb-8">Random String Generator</h1>
+      <h1 className="text-4xl font-bold text-center mb-8">ASD Transformer</h1>
       
       <Card className="w-full max-w-md mx-auto">
         <CardHeader>
-          <CardTitle>Generate a Random String</CardTitle>
+          <CardTitle>Transform Your Text</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <label htmlFor="length" className="w-24">Length:</label>
-              <Input
-                id="length"
-                type="number"
-                min="1"
-                max="100"
-                value={length}
-                onChange={(e) => setLength(parseInt(e.target.value))}
-                className="w-20"
-              />
-            </div>
-            <Button onClick={handleGenerate} className="w-full">Generate</Button>
-            {generatedString && (
+            <Input
+              placeholder="Enter your text here"
+              value={inputText}
+              onChange={handleInputChange}
+            />
+            <Button onClick={handleTransform} className="w-full">Transform</Button>
+            {outputText && (
               <div className="mt-4">
-                <p className="font-semibold mb-2">Generated String:</p>
+                <p className="font-semibold mb-2">Transformed Text:</p>
                 <div className="flex items-center space-x-2">
-                  <Input value={generatedString} readOnly />
+                  <Input value={outputText} readOnly />
                   <Button onClick={handleCopy}>Copy</Button>
                 </div>
               </div>
@@ -74,4 +71,4 @@ const RandomStringGenerator = () => {
   );
 };
 
-export default RandomStringGenerator;
+export default AsdPage;
